@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+{% load static %}
+
+<head>
+    <title>{% block title %}{% endblock title %} | BLOG</title>
+
+    {% block meta %}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#333333">
+        <meta name="msapplication-TileColor" content="#2b5797">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta name="apple-mobile-web-app-title" content="{{ site.name }}">
+        <meta name="og:type" content="website">
+        <meta name="google-site-verification" content="jR5LXh9Kxh2kkd0ks1gaWFoeBamF1N7DrIpXwCtdmVw" />
+    {% endblock meta %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css"
+          integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+    <!--Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark indigo">
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+    aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+    <a class="navbar-brand" href="#">Home</a>
+    <ul class="navbar-nav mr-auto mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="#">Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Another blogs</a>
+      </li>
+    </ul>
+    <ul class="navbar-nav mr-auto mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link">Hello, {{ request.user.first_name }}</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Exit</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<!--/.Navbar -->
+    <div class="container mt-3">
+        {% block content %}
+        {% endblock content %}
+    </div>
+</body>
