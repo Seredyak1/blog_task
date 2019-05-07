@@ -1,10 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
+from django.urls import reverse_lazy
 from django.views import generic, View
+from django.views.generic.edit import CreateView, DeleteView
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from django.contrib.auth.models import User
-
 
 from .models import Blog, Post
 
@@ -25,6 +26,27 @@ class PostDetailView(generic.DetailView):
 
     template_name = 'blog/post_detail.html'
     model = Post
+
+
+class NewsPostView(CreateView):
+
+    template_name = 'blog/posts_new.html'
+    queryset = Post.objects.all()
+    fields = ('title', 'body')
+    success_url = reverse_lazy('blogs_my')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.blog = self.request.user.blog
+        return super().form_valid(form)
+
+
+class PostDeleteView(DeleteView):
+    model = Post
+    success_url = reverse_lazy('blogs_my')
+
+    def get(self, *args, **kwargs):
+        return self.post(*args, **kwargs)
 
 
 class MarkPostAsReadView(View):
