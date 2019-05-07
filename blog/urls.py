@@ -8,5 +8,6 @@ urlpatterns = [
     url(r'^blogs/$', views.BlogsListView.as_view(), name='blogs_list'),
     url(r'^blogs/my/$', views.MyBlogView.as_view(), name='blogs_my'),
     url(r'^blogs/(?P<pk>[0-9]+)/$', views.BlogDetailView.as_view(), name='blogs_detail'),
-    #url(r'^blog/(?P<pk>[0-9]+)/follow/', views.BlogDetailView.as_view(), name='blog_detail'),
+    url(r'^blog/(?P<pk>[0-9]+)/follow/', views.FollowToBlogView.as_view(), name='follow'),
+    url(r'^blog/(?P<pk>[0-9]+)/disfollow/', views.DisfollowToBlogView.as_view(), name='disfollow'),
 ]

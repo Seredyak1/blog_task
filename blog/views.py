@@ -1,8 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib import messages
 from django.views import generic, View
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
 from django.contrib.auth.models import User
+
 
 from .models import Blog, Post
 
@@ -52,3 +54,19 @@ class BlogDetailView(View):
         posts = Post.objects.filter(blog=blog)
         return render(request, 'blog/blogs_detail.html', {'blog': blog,
                                                          'posts': posts})
+
+
+class FollowToBlogView(View):
+    def get(self, request, pk, *args, **kwargs):
+        blog = get_object_or_404(Blog, pk=pk)
+        blog.followers.add(request.user.id)
+        messages.success(request, "You follow to {}".format(blog.user))
+        return redirect('blogs_list')
+
+
+class DisfollowToBlogView(View):
+    def get(self, request, pk, *args, **kwargs):
+        blog = get_object_or_404(Blog, pk=pk)
+        blog.followers.remove(request.user.id)
+        messages.error(request, "You don't follow to {}".format(blog.user))
+        return redirect('blogs_list')

@@ -6,6 +6,11 @@
     <div class="container text-center">
         <h3>Welcome to {{ blog.user }}'s blog</h3>
         <h5>Number of follower: {{ blog.followers.count }}</h5>
+        {% if user not in blog.followers.all %}
+        <a href="{% url 'follow' blog.pk %}"><button>Follow</button></a>
+        {% else %}
+        <a href="{% url 'disfollow' blog.pk %}"><button>DisFollow</button></a>
+        {% endif %}
     </div>
 
     <div class="container">
@@ -19,6 +24,5 @@
             <h6>{{ post.updated_at }}</h6>
         </div>
     {% endfor %}
-
 
 {% endblock %}

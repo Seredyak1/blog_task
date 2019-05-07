@@ -15,7 +15,11 @@
             {% for blog in blogs %}
                 <tr>
                     <th><a href="{% url 'blogs_detail' blog.pk %}">{{ blog.user}}</a></th>
-                    <td><button>Follow</button></td>
+                    <td>        {% if user not in blog.followers.all %}
+        <a href="{% url 'follow' blog.pk %}"><button>Follow</button></a>
+        {% else %}
+        <a href="{% url 'disfollow' blog.pk %}"><button>DisFollow</button></a>
+        {% endif %}</td>
                 </tr>
             {% endfor %}
             </tbody>
