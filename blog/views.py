@@ -3,8 +3,6 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views import generic, View
 from django.views.generic.edit import CreateView, DeleteView
-from django.dispatch import receiver
-from django.db.models.signals import pre_save
 
 from .models import Blog, Post
 
@@ -56,6 +54,7 @@ class PostDeleteView(AuthenticatedMixin, DeleteView):
 
 
 class MarkPostAsReadView(AuthenticatedMixin, View):
+
     def get(self, request, pk, *args, **kwargs):
         post = get_object_or_404(Post, pk=pk)
         post.read_by.add(request.user)
@@ -64,6 +63,7 @@ class MarkPostAsReadView(AuthenticatedMixin, View):
 
 
 class MarkPostAsUnread(AuthenticatedMixin, View):
+
     def get(self, request, pk, *args, **kwargs):
         post = get_object_or_404(Post, pk=pk)
         post.read_by.remove(request.user)

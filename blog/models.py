@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.core.mail import send_mail
 
 
 class Blog(models.Model):
@@ -15,14 +14,6 @@ class Blog(models.Model):
 
     def __str__(self):
         return str(self.user.first_name) + "'s" + " blog"
-
-
-# signal to create personal blog for new User
-@receiver(post_save, sender=User)
-def create_blog_for_new_user(sender, created, instance, **kwargs):
-    if created:
-        blog = Blog(user=instance)
-        blog.save()
 
 
 class Post(models.Model):
@@ -40,4 +31,8 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
-
+    def notify_about_new_post(self):
+        users_email = self.blog.followers.values_list('email', flat=True)
+        subject = 'In Blog we have new post!'
+        html_content = 'You can look it here: http://127.0.0.1:8000/posts/{}/'.format(self.pk)
+        send_mail(subject, html_content, 'laik.travel@gmail.com', users_email, fail_silently=True)
