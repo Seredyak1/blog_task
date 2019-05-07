@@ -27,6 +27,22 @@ class PostDetailView(generic.DetailView):
     model = Post
 
 
+class MarkPostAsReadView(View):
+    def get(self, request, pk, *args, **kwargs):
+        post = get_object_or_404(Post, pk=pk)
+        post.read_by.add(request.user)
+        messages.success(request, "Post {} by {} is read!".format(post.pk, post.user))
+        return redirect('newsline')
+
+
+class MarkPostAsUnread(View):
+    def get(self, request, pk, *args, **kwargs):
+        post = get_object_or_404(Post, pk=pk)
+        post.read_by.remove(request.user)
+        messages.error(request, "Post {} by {} is unread!".format(post.pk, post.user))
+        return redirect('newsline')
+
+
 class MyBlogView(generic.ListView):
 
     template_name = 'blog/blogs_my.html'
@@ -64,9 +80,11 @@ class FollowToBlogView(View):
         return redirect('blogs_list')
 
 
-class DisfollowToBlogView(View):
+class DisfollowFromBlogView(View):
     def get(self, request, pk, *args, **kwargs):
         blog = get_object_or_404(Blog, pk=pk)
         blog.followers.remove(request.user.id)
+        for post in Post.objects.filter(blog=blog):
+            post.read_by.remove(request.user.id)
         messages.error(request, "You don't follow to {}".format(blog.user))
         return redirect('blogs_list')

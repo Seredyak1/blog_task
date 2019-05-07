@@ -10,6 +10,13 @@
             <a href="{% url 'post_detail' post.pk %}"><h3>{{ post.title }}</h3></a>
             <h5>{{ post.body }}</h5>
             <h6>{{ post.updated_at }}</h6>
+            {% if user in post.read_by.all %}
+                <h6>Status: <strong>Read</strong></h6>
+                <h6 class="mt-4"><a href="{% url 'post_unread' post.pk %}"><button>Mark as unread!</button></a></h6>
+            {% else %}
+                <h6>Status: <strong>Unread</strong></h6>
+                <h6 class="mt-4"><a href="{% url 'post_read' post.pk %}"><button>Mark as read!</button></a></h6>
+            {% endif %}
         </div>
     {% endfor %}
 {% endblock %}
