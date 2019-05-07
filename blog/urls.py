@@ -3,7 +3,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^/$', views.NewsLineView.as_view(), name='newsline'),
+    url(r'^$', views.NewsLineView.as_view(), name='newsline'),
     url(r'^posts/(?P<pk>[0-9]+)/$', views.PostDetailView.as_view(), name='post_detail'),
     url(r'^posts/(?P<pk>[0-9]+)/mark_as_read/$', views.MarkPostAsReadView.as_view(), name='post_read'),
     url(r'^posts/(?P<pk>[0-9]+)/mark_as_unread/$', views.MarkPostAsUnread.as_view(), name='post_unread'),

@@ -5,12 +5,18 @@ from django.views import generic, View
 from django.views.generic.edit import CreateView, DeleteView
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
-from django.contrib.auth.models import User
 
 from .models import Blog, Post
 
 
-class NewsLineView(generic.ListView):
+class AuthenticatedMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_authenticated():
+            return redirect('/accounts/login/')
+        return super(AuthenticatedMixin, self).dispatch(request, *args, **kwargs)
+
+
+class NewsLineView(AuthenticatedMixin, generic.ListView):
 
     template_name = 'blog/newsline.html'
     context_object_name = 'posts'
@@ -22,13 +28,13 @@ class NewsLineView(generic.ListView):
         return queryset
 
 
-class PostDetailView(generic.DetailView):
+class PostDetailView(AuthenticatedMixin, generic.DetailView):
 
     template_name = 'blog/post_detail.html'
     model = Post
 
 
-class NewsPostView(CreateView):
+class NewsPostView(AuthenticatedMixin, CreateView):
 
     template_name = 'blog/posts_new.html'
     queryset = Post.objects.all()
@@ -41,7 +47,7 @@ class NewsPostView(CreateView):
         return super().form_valid(form)
 
 
-class PostDeleteView(DeleteView):
+class PostDeleteView(AuthenticatedMixin, DeleteView):
     model = Post
     success_url = reverse_lazy('blogs_my')
 
@@ -49,7 +55,7 @@ class PostDeleteView(DeleteView):
         return self.post(*args, **kwargs)
 
 
-class MarkPostAsReadView(View):
+class MarkPostAsReadView(AuthenticatedMixin, View):
     def get(self, request, pk, *args, **kwargs):
         post = get_object_or_404(Post, pk=pk)
         post.read_by.add(request.user)
@@ -57,7 +63,7 @@ class MarkPostAsReadView(View):
         return redirect('newsline')
 
 
-class MarkPostAsUnread(View):
+class MarkPostAsUnread(AuthenticatedMixin, View):
     def get(self, request, pk, *args, **kwargs):
         post = get_object_or_404(Post, pk=pk)
         post.read_by.remove(request.user)
@@ -65,7 +71,7 @@ class MarkPostAsUnread(View):
         return redirect('newsline')
 
 
-class MyBlogView(generic.ListView):
+class MyBlogView(AuthenticatedMixin, generic.ListView):
 
     template_name = 'blog/blogs_my.html'
     context_object_name = 'posts'
@@ -75,7 +81,7 @@ class MyBlogView(generic.ListView):
         return Post.objects.filter(user=self.request.user)
 
 
-class BlogsListView(generic.ListView):
+class BlogsListView(AuthenticatedMixin, generic.ListView):
 
     template_name = 'blog/blogs_list.html'
     context_object_name = 'blogs'
@@ -85,7 +91,7 @@ class BlogsListView(generic.ListView):
         return Blog.objects.all().exclude(user=self.request.user)
 
 
-class BlogDetailView(View):
+class BlogDetailView(AuthenticatedMixin, View):
 
     def get(self, request, pk, *args, **kwargs):
         blog = get_object_or_404(Blog, pk=pk)
@@ -94,7 +100,7 @@ class BlogDetailView(View):
                                                          'posts': posts})
 
 
-class FollowToBlogView(View):
+class FollowToBlogView(AuthenticatedMixin, View):
     def get(self, request, pk, *args, **kwargs):
         blog = get_object_or_404(Blog, pk=pk)
         blog.followers.add(request.user.id)
@@ -102,7 +108,7 @@ class FollowToBlogView(View):
         return redirect('blogs_list')
 
 
-class DisfollowFromBlogView(View):
+class DisfollowFromBlogView(AuthenticatedMixin, View):
     def get(self, request, pk, *args, **kwargs):
         blog = get_object_or_404(Blog, pk=pk)
         blog.followers.remove(request.user.id)

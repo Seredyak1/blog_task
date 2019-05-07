@@ -9,6 +9,7 @@ import debug_toolbar
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'', include('blog.urls')),
+    url(r'^accounts/', include('django.contrib.auth.urls'))
 ]
 
 urlpatterns += [url(r'^__debug__/', include(debug_toolbar.urls))]
