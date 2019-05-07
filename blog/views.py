@@ -8,6 +8,8 @@ from .models import Blog, Post
 
 
 class AuthenticatedMixin(object):
+    """Mixin, check in user's auth.
+    If not - redirect ot url"""
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
             return redirect('/accounts/login/')
@@ -15,7 +17,10 @@ class AuthenticatedMixin(object):
 
 
 class NewsLineView(AuthenticatedMixin, generic.ListView):
-
+    """
+    get:
+    Show all posts from blog, what user follow. Exclude himself
+    """
     template_name = 'blog/newsline.html'
     context_object_name = 'posts'
     paginate_by = 10
@@ -27,13 +32,19 @@ class NewsLineView(AuthenticatedMixin, generic.ListView):
 
 
 class PostDetailView(AuthenticatedMixin, generic.DetailView):
-
+    """
+    get:
+    Show post detail by pk
+    """
     template_name = 'blog/post_detail.html'
     model = Post
 
 
 class NewsPostView(AuthenticatedMixin, CreateView):
-
+    """
+    post:
+    Create news post
+    """
     template_name = 'blog/posts_new.html'
     queryset = Post.objects.all()
     fields = ('title', 'body')
@@ -46,6 +57,10 @@ class NewsPostView(AuthenticatedMixin, CreateView):
 
 
 class PostDeleteView(AuthenticatedMixin, DeleteView):
+    """
+    Delete post.
+    get: Use for delete without confirm
+    """
     model = Post
     success_url = reverse_lazy('blogs_my')
 
@@ -54,7 +69,10 @@ class PostDeleteView(AuthenticatedMixin, DeleteView):
 
 
 class MarkPostAsReadView(AuthenticatedMixin, View):
-
+    """
+    get:
+    Mark post as read. Add user to field "read_by"
+    """
     def get(self, request, pk, *args, **kwargs):
         post = get_object_or_404(Post, pk=pk)
         post.read_by.add(request.user)
@@ -63,7 +81,10 @@ class MarkPostAsReadView(AuthenticatedMixin, View):
 
 
 class MarkPostAsUnread(AuthenticatedMixin, View):
-
+    """
+    get:
+    Mark post as unread. Remove user from field "read_by"
+    """
     def get(self, request, pk, *args, **kwargs):
         post = get_object_or_404(Post, pk=pk)
         post.read_by.remove(request.user)
@@ -72,7 +93,10 @@ class MarkPostAsUnread(AuthenticatedMixin, View):
 
 
 class MyBlogView(AuthenticatedMixin, generic.ListView):
-
+    """
+    get:
+    Show all user's post.
+    """
     template_name = 'blog/blogs_my.html'
     context_object_name = 'posts'
     paginate_by = 10
@@ -82,7 +106,10 @@ class MyBlogView(AuthenticatedMixin, generic.ListView):
 
 
 class BlogsListView(AuthenticatedMixin, generic.ListView):
-
+    """
+    get:
+    Show all blogs, available for following without user's blog
+    """
     template_name = 'blog/blogs_list.html'
     context_object_name = 'blogs'
     paginate_by = 10
@@ -92,7 +119,10 @@ class BlogsListView(AuthenticatedMixin, generic.ListView):
 
 
 class BlogDetailView(AuthenticatedMixin, View):
-
+    """
+    get:
+    Show all posts and blog's detail, created by another user
+    """
     paginate_by = 10
 
     def get(self, request, pk, *args, **kwargs):
@@ -103,6 +133,10 @@ class BlogDetailView(AuthenticatedMixin, View):
 
 
 class FollowToBlogView(AuthenticatedMixin, View):
+    """
+    get:
+    Start to "follow" from another blog; Add user to field "followers"
+    """
     def get(self, request, pk, *args, **kwargs):
         blog = get_object_or_404(Blog, pk=pk)
         blog.followers.add(request.user.id)
@@ -110,7 +144,12 @@ class FollowToBlogView(AuthenticatedMixin, View):
         return redirect('blogs_list')
 
 
-class DisfollowFromBlogView(AuthenticatedMixin, View):
+class UnfollowFromBlogView(AuthenticatedMixin, View):
+    """
+    get:
+    Stop to "follow" from another blog:
+    Remuve user from field "followers" and from filed "read_by" in Post
+    """
     def get(self, request, pk, *args, **kwargs):
         blog = get_object_or_404(Blog, pk=pk)
         blog.followers.remove(request.user.id)

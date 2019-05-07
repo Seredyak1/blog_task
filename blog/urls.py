@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'^blogs/my/$', views.MyBlogView.as_view(), name='blogs_my'),
     url(r'^blogs/(?P<pk>[0-9]+)/$', views.BlogDetailView.as_view(), name='blogs_detail'),
     url(r'^blog/(?P<pk>[0-9]+)/follow/', views.FollowToBlogView.as_view(), name='follow'),
-    url(r'^blog/(?P<pk>[0-9]+)/disfollow/', views.DisfollowFromBlogView.as_view(), name='disfollow'),
+    url(r'^blog/(?P<pk>[0-9]+)/unfollow/', views.UnfollowFromBlogView.as_view(), name='unfollow'),
 ]

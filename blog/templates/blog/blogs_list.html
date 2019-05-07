@@ -18,7 +18,7 @@
                     <td>        {% if user not in blog.followers.all %}
         <a href="{% url 'follow' blog.pk %}"><button>Follow</button></a>
         {% else %}
-        <a href="{% url 'disfollow' blog.pk %}"><button>DisFollow</button></a>
+        <a href="{% url 'unfollow' blog.pk %}"><button>Unfollow</button></a>
         {% endif %}</td>
                 </tr>
             {% endfor %}
