@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog {{ blog.user }}{% endblock %}
+
+{% block content %}
+    <div class="container text-center">
+        <h3>Welcome to {{ blog.user }}'s blog</h3>
+        <h5>Number of follower: {{ blog.followers.count }}</h5>
+    </div>
+
+    <div class="container">
+        <h4 class="text-center">Last posts:</h4>
+    </div>
+    {% for post in posts %}
+        <div class="container mt-3" style="border: 1px solid #00612f; border-radius: 10px;">
+            <h6 class="text-right">From {{ post.blog }}</h6>
+            <a href="{% url 'post_detail' post.pk %}"><h3>{{ post.title }}</h3></a>
+            <h5>{{ post.body }}</h5>
+            <h6>{{ post.updated_at }}</h6>
+        </div>
+    {% endfor %}
+
+
+{% endblock %}

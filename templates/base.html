@@ -21,33 +21,54 @@
 
 </head>
 <body>
-    <!--Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark indigo">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
-    aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+<!--Navbar-->
+<div class="container">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="{% url 'newsline' %}">Home</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-    <a class="navbar-brand" href="#">Home</a>
-    <ul class="navbar-nav mr-auto mt-lg-0">
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" href="#">Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Another blogs</a>
+        <a class="nav-link" href="{% url 'blogs_list' %}">Another Blogs</a>
       </li>
     </ul>
-    <ul class="navbar-nav mr-auto mt-lg-0">
-      <li class="nav-item">
-        <a class="nav-link">Hello, {{ request.user.first_name }}</a>
+    {% if request.user.is_authenticated %}
+    <ul class="navbar-nav my-2 my-lg-0">
+    <li class="nav-item">
+        <a class="nav-link" href="#">Hello, {{ request.user.first_name }}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Exit</a>
+        <a class="nav-link" href="{% url 'blogs_my' %}">My blog</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Logout</a>
       </li>
     </ul>
+    {% else %}
+    <ul class="navbar-nav my-2 my-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" href="#">Login</a>
+      </li>
+    </ul>
+    {% endif %}
   </div>
 </nav>
-<!--/.Navbar -->
+</div>
+<!--/.Navbar-->
+
+    <div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert{% if message.tags %} alert-{{ message.tags }}{% endif %}">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
     <div class="container mt-3">
         {% block content %}
         {% endblock content %}

@@ -8,7 +8,7 @@ import debug_toolbar
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
-    #url(r'^blog/$', views.page),
+    url(r'', include('blog.urls')),
 ]
 
-+ urlpatterns = [url(r'^__debug__/', include(debug_toolbar.urls))]
+urlpatterns += [url(r'^__debug__/', include(debug_toolbar.urls))]

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}All blogs{% endblock %}
+
+{% block content %}
+
+        <table class="table">
+            <thead>
+            <tr>
+              <th scope="col">Blogs Author</th>
+              <th scope="col">Follow</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for blog in blogs %}
+                <tr>
+                    <th><a href="{% url 'blogs_detail' blog.pk %}">{{ blog.user}}</a></th>
+                    <td><button>Follow</button></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+{% endblock %}

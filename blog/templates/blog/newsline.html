@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}NewsLine{% endblock %}
+
+{% block content %}
+    {% for post in posts %}
+        <div class="container mt-3" style="border: 1px solid #00612f; border-radius: 10px;">
+                    <a href="{% url 'blog_detail' post.blog.pk %}"><h4 class="text-center">From {{ post.blog }}</h4></a>
+
+            <a href="{% url 'post_detail' post.pk %}"><h3>{{ post.title }}</h3></a>
+            <h5>{{ post.body }}</h5>
+            <h6>{{ post.updated_at }}</h6>
+        </div>
+    {% endfor %}
+{% endblock %}
