@@ -75,7 +75,7 @@ class MyBlogView(AuthenticatedMixin, generic.ListView):
 
     template_name = 'blog/blogs_my.html'
     context_object_name = 'posts'
-    paginate_by = 20
+    paginate_by = 10
 
     def get_queryset(self):
         return Post.objects.filter(user=self.request.user)
@@ -85,13 +85,15 @@ class BlogsListView(AuthenticatedMixin, generic.ListView):
 
     template_name = 'blog/blogs_list.html'
     context_object_name = 'blogs'
-    paginate_by = 20
+    paginate_by = 10
 
     def get_queryset(self):
         return Blog.objects.all().exclude(user=self.request.user)
 
 
 class BlogDetailView(AuthenticatedMixin, View):
+
+    paginate_by = 10
 
     def get(self, request, pk, *args, **kwargs):
         blog = get_object_or_404(Blog, pk=pk)
